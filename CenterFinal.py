@@ -96,6 +96,8 @@ while True:
         if num1 + num2 != 0:
             num1 = 0
             num2 = 0
+            setDisplay(num1, 0)
+            setDisplay(num2, 1)
         
     else:
         red.value(1)
