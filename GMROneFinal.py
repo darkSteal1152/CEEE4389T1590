@@ -2,6 +2,8 @@ from machine import Pin, ADC, I2C
 import time
 from imu import MPU6050
 from easy_comms import Easy_comms
+import utime
+import math
 
 GMRPin = Pin(28, Pin.IN)
 LEDPin = Pin(25, Pin.OUT)
@@ -11,12 +13,15 @@ conversion_factor = 3.3 / (65535)
 
 i2c = I2C(0, sda=Pin(12), scl=Pin(13), freq=400000)
 imu = MPU6050(i2c)
-#adc = ADC(Pin(26, mode=Pin.IN))
 
 currX = 0
 currY = 0
 currZ = 0
-fast = 1
+fast = 10
+hast = -10
+altx = 0
+alty = 0
+altz = 0
 
 prev = 1
 curr = 0
@@ -26,6 +31,8 @@ count = 0
 sensor_id = 1
 error_id = 0
 com1 = Easy_comms(0, 9600)
+
+start_time = utime.ticks_us()
 
 while True:
     
@@ -48,6 +55,23 @@ while True:
         
     if abs(currX - ax) > fast or abs(currY - ay) > fast or abs(currY - ay) > fast:
         error_id = 1
+        print(ax, ay, az, fast)
+        com1.send(f'Sensor {sensor_id} has error {error_id}')
+
+    end_time = utime.ticks_us()
+    elapsed_time = utime.ticks_diff(end_time, start_time)
+    altx = altx + 0.5 * gx * math.pow(elapsed_time / 1000000, 2)
+    alty = alty + 0.5 * gy * math.pow(elapsed_time / 1000000, 2)
+    altz = altz + 0.5 * gz * math.pow(elapsed_time / 1000000, 2)
+
+    if altx <= hast or alty <= hast or altz <= hast:
+        error_id = 2
+        print(altx, alty, altz, hast)
+        com1.send(f'Sensor {sensor_id} has error {error_id}')
+
+    if abs(gx) >= 45 or abs(gy) >= 45 or abs(gz) >= 45:
+        error_id = 3
+        print(gx, gy, gz)
         com1.send(f'Sensor {sensor_id} has error {error_id}')
     
     while error_id != 0:
@@ -67,3 +91,4 @@ while True:
             com1.send(f'Sensor {sensor_id} has wheel {count}')
     LEDPin.value(0)
     curr = 0
+    start_time = utime.ticks_us()
