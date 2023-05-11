@@ -3,19 +3,19 @@ from easy_comms import Easy_comms
 import time
 import json
 
-led = Pin('LED', Pin.OUT)
+led = Pin(25, Pin.OUT)
 #button1 = Pin(14, Pin.OUT)
 #button2 = Pin(15, Pin.OUT)
 n0 = Pin(18, Pin.OUT)
-n1 = Pin(19, Pin.OUT)
+n1 = Pin(21, Pin.OUT)
 n2 = Pin(20, Pin.OUT)
-n3 = Pin(21, Pin.OUT)
+n3 = Pin(19, Pin.OUT)
 m0 = Pin(13, Pin.OUT)
 m1 = Pin(12, Pin.OUT)
 m2 = Pin(11, Pin.OUT)
 m3 = Pin(10, Pin.OUT)
-green = Pin(26, Pin.OUT)
-red = Pin(27, Pin.OUT)
+green = Pin(27, Pin.OUT)
+red = Pin(26, Pin.OUT)
 yellow = Pin(15, Pin.OUT)
 buttonE = Pin(14, Pin.IN, Pin.PULL_DOWN)
 
