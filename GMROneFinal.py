@@ -11,7 +11,7 @@ LEDPin = Pin(25, Pin.OUT)
 sensor_temp = machine.ADC(4)
 conversion_factor = 3.3 / (65535)
 
-i2c = I2C(0, sda=Pin(12), scl=Pin(13), freq=400000)
+i2c = I2C(0, sda=Pin(12), scl=Pin(13), freq=200000)
 imu = MPU6050(i2c)
 
 currX = 0
@@ -28,6 +28,9 @@ curr = 0
 
 count = 0
 
+# sensor id depends on sensor
+# sensor 1 or 2
+# change accordingly
 sensor_id = 1
 error_id = 0
 com1 = Easy_comms(0, 9600)
@@ -69,7 +72,7 @@ while True:
         print(altx, alty, altz, hast)
         com1.send(f'Sensor {sensor_id} has error {error_id}')
 
-    if abs(gx) >= 45 or abs(gy) >= 45 or abs(gz) >= 45:
+    if abs(gx) >= 60 or abs(gy) >= 60 or abs(gz) >= 60:
         error_id = 3
         print(gx, gy, gz)
         com1.send(f'Sensor {sensor_id} has error {error_id}')
@@ -81,6 +84,7 @@ while True:
         if message == "Button Pressed":
             error_id = 0
             count = 0
+            message = ""
     
     while not(GMRPin.value()):
         LEDPin.value(1)
