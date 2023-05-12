@@ -114,6 +114,10 @@ while True:
             com1.send("Button Pressed")
             yellow.value(0)
             errDone = 0
+            num1 = 0
+            num2 = 0
+            setDisplay(num1, 0)
+            setDisplay(num2, 1)
     else:
         if sensor_id == "1":
             num1 = inc(num1)
